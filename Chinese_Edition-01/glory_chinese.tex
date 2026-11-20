@@ -1,0 +1,338 @@
+\documentclass[12pt,twoside,openany]{book}
+
+% ---------- Page size (6x9) ----------
+\usepackage[
+  paperwidth=6in,
+  paperheight=9in,
+  inner=1in,
+  outer=0.9in,
+  top=1in,
+  bottom=1in
+]{geometry}
+\usepackage{graphicx}
+%\usepackage{footmisc} % in the preamble
+\usepackage[multiple]{footmisc}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{indentfirst}   % indent the first paragraph after every heading (Chinese style)
+\usepackage{tocloft}
+\usepackage[skins, breakable]{tcolorbox}
+\usepackage{caption}
+\DeclareCaptionLabelSeparator{zhcolon}{：}
+\captionsetup{labelsep=zhcolon}
+\renewcommand{\tablename}{表}
+\renewcommand{\listtablename}{表目錄}
+\renewcommand{\listfigurename}{圖目錄}
+% center the list titles like your 目錄
+\renewcommand{\cftlottitlefont}{\hfill\Large}
+\renewcommand{\cftafterlottitle}{\hfill}
+\renewcommand{\cftloftitlefont}{\hfill\Large}
+\renewcommand{\cftafterloftitle}{\hfill}
+\newcommand{\fnsep}{\textsuperscript{,}}
+% room for numbers like 2.10
+\setlength{\cfttabnumwidth}{4em}
+\setlength{\cftfignumwidth}{4em}
+
+%\captionsetup[table]{labelformat=empty}
+% ---------- Chinese + font ----------
+\usepackage{fontspec}
+\usepackage{pdfpages} 
+\usepackage{xeCJK}
+\setCJKmainfont{KaiTi} % macOS: Kaiti TC / Windows: KaiTi, DFKai-SB
+\pagenumbering{arabic}
+% ---------- Typography ----------
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.2em}
+\linespread{1.25}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{enumitem}
+\raggedbottom
+% ---------- TOC ----------
+
+\renewcommand{\contentsname}{\Large{目錄}}
+\renewcommand{\cfttoctitlefont}{\hfill\Large}
+\renewcommand{\cftaftertoctitle}{\hfill}
+\setlength{\cftbeforechapskip}{0.3em}
+\setlength{\cftchapnumwidth}{3.5em}
+\setlist[enumerate]{itemsep=0.8pt, topsep=0pt, parsep=0pt}
+\setlist[itemize]{itemsep=0.8pt, topsep=0pt, parsep=0pt}
+%\newcommand{\subsectiontitle}[1]{%
+%    \vspace{1em}
+%    {\noindent\normalsize\bfseries #1}
+%    \vspace{0.5em}
+%}
+\newcommand{\subsectiontitle}[1]{%
+    \vspace{1em}
+    {\noindent\normalsize\bfseries #1}
+    \vspace{0.5em}
+    \addcontentsline{toc}{section}{#1}%
+}
+\usepackage{booktabs}
+\newenvironment{ScriptureBox}
+{%
+\begin{tcolorbox}[
+    width=\textwidth,
+    center,
+    colback=gray!5,
+    colframe=gray!70,
+    enhanced,
+    boxrule=0.5pt,
+    breakable,
+    left=0pt,
+    right=5pt,
+    top=4pt,
+    bottom=4pt
+]
+\linespread{1.1}\selectfont
+\begin{list}{}{%
+    \setlength{\labelwidth}{0.8cm}%
+    \setlength{\labelsep}{0.25cm}%
+    \setlength{\leftmargin}{1.05cm}%
+    \setlength{\rightmargin}{0pt}%
+    \setlength{\topsep}{0pt}%
+    \setlength{\partopsep}{0pt}%
+    \setlength{\parsep}{0pt}%
+    \setlength{\itemsep}{0pt}%
+}
+}
+{%
+\end{list}%
+\end{tcolorbox}%
+}
+
+\newenvironment{DialogueBox}[1][弟兄對話]
+{%
+\begin{tcolorbox}[
+    width=\textwidth,
+    colback=gray!5,
+    colframe=gray!70,
+    colbacktitle=gray,
+    coltitle=white,
+    title={#1},
+    title style={halign=center},
+    boxrule=0.5pt,
+    breakable,
+    center title
+]
+\linespread{1.1}\selectfont
+}
+{%
+\end{tcolorbox}
+}
+
+\usepackage{setspace}
+\usepackage{etoolbox}
+
+\pretocmd{\tableofcontents}{\begingroup\setstretch{1.0}}{}{}
+\apptocmd{\tableofcontents}{\endgroup}{}{}
+
+
+% small square checkbox
+\newcommand{\CheckBox}{{\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{0.6pt}%
+  \raisebox{-0.1em}{\fbox{\rule{0pt}{0.75em}\hspace{0.75em}}}}}
+
+% question sentence with a checkbox on the right
+\newcommand{\AskQ}[1]{%
+  \par\noindent
+  \parbox[b]{\dimexpr\linewidth-0.8cm\relax}{#1}%
+  \hfill\CheckBox\par}
+
+% question inside \item: label and checkbox on the first line
+\newcommand{\AskItem}[1]{%
+  \parbox[t]{\dimexpr\linewidth-0.8cm\relax}{#1}%
+  \hfill\CheckBox}
+
+
+% ---------- Headers ----------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RE]{\small 被恩典帶入榮耀}
+\fancyhead[RO]{\small \leftmark}
+\fancyfoot[LE,RO]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\renewcommand{\chaptermark}[1]{%
+  \markboth{第\arabic{chapter}章\ #1}{}}
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[LE,RO]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+\renewcommand{\figurename}{圖}
+\renewcommand{\thefigure}{\arabic{chapter}.\arabic{figure}}
+\usepackage{pifont}
+\usepackage{amssymb}   % for \Box
+% ---------- Chapters in Chinese ----------
+\renewcommand{\chaptername}{}
+\renewcommand{\thechapter}{第\arabic{chapter}章}
+\renewcommand{\thetable}{\arabic{chapter}.\arabic{table}}
+
+%\renewcommand{\thechapter}{第~\arabic{chapter}~章}
+\renewcommand{\thesection}{\arabic{chapter}.\arabic{section}}
+% ---------- Footnotes ----------
+\usepackage{csquotes}
+% Burgundy color (print-safe, classical)
+\definecolor{burgundy}{HTML}{800020}
+\newcommand{\sectiontitle}[1]{%
+  \bigskip
+  {\noindent\large\bfseries\color{black}#1}\par
+  \medskip
+}
+\setlength{\footnotemargin}{0pt} % optional: remove indent
+\renewcommand{\footnotelayout}{\raggedright} % left-align footnotes
+\captionsetup[longtable]{
+  skip=0pt
+}
+\usepackage{graphicx} 
+\usepackage{fancyhdr} 
+\pagestyle{fancy} 
+\fancyhf{} 
+\fancyhead[LE]{
+ \includegraphics[height=0.6cm]{images/lamb1.png}
+ \hspace{0em} 被恩典帶入榮耀 } 
+ \fancyhead[RO]{
+ \leftmark\hspace{0em} 
+ \includegraphics[height=0.6cm]{images/lamb1.png} 
+} 
+\fancyfoot[LE,RO]{\thepage} 
+\renewcommand{\headrulewidth}{0pt}
+\usepackage{fontawesome5}
+
+%\titleformat{\chapter}
+%  {\color{black}\Huge\bfseries} % format
+%  {\thechapter}                    % 第 n 章
+%  {1cm}                            % separation
+%  {}
+  
+\begin{document}
+
+
+\includepdf[
+  pages=1,
+  fitpaper=true,
+  scale=1
+]{cover/brought_into_glory_ebook_6_9.pdf}
+
+
+
+% =========================
+% Front Matter
+% =========================
+
+%\frontmatter
+%\pagenumbering{arabic}
+
+% ----- Copyright -----
+\thispagestyle{empty}
+\vspace*{\fill}
+\footnotesize
+
+\noindent
+© 2026 Chris Kuo
+
+\vspace{0.5cm}
+
+\noindent 
+%ISBN：\\
+第一版：2026 年 12 月\\
+
+本書任何部分不得以任何形式重製、儲存或傳播（包括電子、機械、影印、錄音或其他方式）。惟依據1976年《美國著作權法》第107條及第108條所規範之合理使用，或用於評論、教學及其他非商業性用途之適當引用，則不在此限。如有意以任何形式重製、儲存或傳播，請取得作者書面同意。
+
+作者與出版者在編寫本書時，盡力求其內容準確與完整；然而，因人的有限，難免仍有疏漏之處。若讀者發現錯誤，懇請不吝指正。凡因使用本書內容所產生之任何結果，作者與出版者不承擔相關責任。
+\vfill
+
+\noindent The Innovation Press, \\
+\noindent Ann Arbor, MI 
+\begin{figure}[!htbp]
+  \includegraphics[width=0.20\textwidth]{others/innovation_press.png}% Replace example-image with the filename of your image
+\end{figure}
+\vfill
+
+
+% ----- Copyright -----
+\clearpage
+\thispagestyle{empty}
+\vspace*{\fill}
+\normalsize{
+\indent 親愛的\underline{\hspace{5cm}}：\\
+
+\indent \indent 如果您偶爾會問天堂是怎麼樣子的，\\
+\indent \indent 讓我邀請您來讀這本書！
+}
+\vspace*{\fill}
+
+
+
+
+% ----- TOC -----
+% ----- Front Matter -----
+\pagenumbering{roman}
+
+\input{chapters/revelation_gospel.tex}
+\clearpage
+\vspace*{-1.1in}
+{
+\setstretch{1.2}
+\tableofcontents
+}
+\makeatletter
+\clearpage
+\vspace*{-1.1in}
+%\addcontentsline{toc}{chapter}{表目錄}
+{%
+\setlength{\cftafterlottitleskip}{1em}   % space below 表目錄
+  \setstretch{1.0}%
+  \setlength{\cftbeforetabskip}{0.3em}%   same as \cftbeforechapskip in the TOC
+  \let\addvspace\@gobble
+  \listoftables
+}
+\vspace*{-1cm}
+{%
+\setlength{\cftafterloftitleskip}{1em}   % space below 圖目錄
+  \setstretch{1.0}%
+  \setlength{\cftbeforefigskip}{0.3em}%
+  \let\addvspace\@gobble
+  \let\clearpage\relax
+%  \addcontentsline{toc}{chapter}{圖目錄}
+  \listoffigures
+}
+\makeatother
+
+% Main Matter
+%\mainmatter
+%\pagenumbering{arabic}
+
+% Main Matter
+\clearpage
+\pagenumbering{arabic}
+
+
+\input{chapters/self_preface.tex}
+\input{chapters/ch01.tex}
+\input{chapters/ch02.tex}
+\input{chapters/ch03.tex}
+\input{chapters/ch04.tex}
+\input{chapters/ch05.tex}
+\input{chapters/ch06.tex}
+\input{chapters/ch07.tex}
+\input{chapters/ch08.tex}
+\input{chapters/ch09.tex}
+\input{chapters/ch10.tex}
+\input{chapters/ch11.tex}
+\input{chapters/ch12.tex}
+\input{chapters/appendix_qa.tex}
+\input{chapters/appendix_endtime.tex}
+\input{chapters/appendix_7years.tex}
+\input{chapters/appendix_rapture.tex}
+\input{chapters/appendix_millennialism.tex}
+\input{chapters/appendix_teachers.tex}
+\clearpage
+\thispagestyle{empty}
+\mbox{}
+\clearpage
+
+\end{document}

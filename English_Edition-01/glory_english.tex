@@ -1,0 +1,367 @@
+\documentclass[12pt,twoside,openany]{book}   % openright, as in the published book
+
+% ---------- Page size (6x9) ----------
+\usepackage[
+  paperwidth=6in,
+  paperheight=9in,
+  inner=1in,
+  outer=0.9in,
+  top=1in,
+  bottom=1in
+]{geometry}
+\pagenumbering{arabic}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{etoolbox}                 % load early: \newtoggle is used below
+\usepackage[skins, breakable]{tcolorbox}
+\usepackage{pdfpages}
+\usepackage{setspace}
+\usepackage[multiple]{footmisc}
+% ---------- Font (English) ----------
+\usepackage{fontspec}
+\setmainfont{Baskerville}
+\usepackage{microtype} \emergencystretch=2em
+% If any Chinese characters remain in the text (e.g. a name), uncomment:
+% \usepackage{xeCJK}
+% \setCJKmainfont{KaiTi}
+
+% ---------- Color ----------
+\usepackage{xcolor}
+\definecolor{burgundy}{HTML}{800020}
+
+% ---------- Typography ----------
+\setlength{\parskip}{0.15cm}
+\setlength{\parindent}{1.5em}
+\linespread{1.1}
+\raggedbottom
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{xurl}                     % breakable URLs in footnotes (Preface)
+\usepackage{ragged2e}
+% ---------- Captions, tables, figures ----------
+% ---------- Float placement ----------
+% Let a figure share a page with text instead of being sent to a page by itself,
+% and put any figure that does get its own page at the top, not the middle.
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.85}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\makeatother
+\usepackage{caption}
+\captionsetup{labelfont=bf, labelsep=colon}   % "Table 2.1: ...", "Figure 2.1: ..."
+\captionsetup[longtable]{skip=0pt}
+% (book class already numbers tables and figures as 2.1, 2.2, ...)
+
+% ---------- TOC, List of Tables, List of Figures ----------
+\usepackage{tocloft}
+%\renewcommand{\contentsname}{\Large Contents}
+\renewcommand{\cfttoctitlefont}{\hfill\Large}
+\renewcommand{\cftaftertoctitle}{\hfill}
+\setlength{\cftbeforechapskip}{0.6em}
+\setlength{\cftchapnumwidth}{2em}
+
+\renewcommand{\listtablename}{List of Tables}
+\renewcommand{\listfigurename}{List of Figures}
+\renewcommand{\cftlottitlefont}{\hfill\Large}
+\def\cftafterlottitle{\hfill}
+\renewcommand{\cftloftitlefont}{\hfill\Large}
+\def\cftafterloftitle{\hfill}
+\setlength{\cfttabnumwidth}{2em}
+\setlength{\cftfignumwidth}{2em}
+\setlength{\cftafterlottitleskip}{1em}
+\setlength{\cftafterloftitleskip}{1em}
+\setlength{\cftbeforeloftitleskip}{1em}
+
+\setlist[enumerate]{itemsep=0.8pt, topsep=0pt, parsep=0pt}
+\setlist[itemize]{itemsep=0.8pt, topsep=0pt, parsep=0pt}
+
+% ---------- Unnumbered subsection heading (goes into TOC) ----------
+\newcommand{\subsectiontitle}[1]{%
+  \par\vspace{1em}%
+  {\noindent\normalsize\bfseries #1\par}%
+  \nobreak\vspace{0.5em}%
+  \addcontentsline{toc}{section}{#1}%
+}
+
+% ---------- Section title (custom) ----------
+\newcommand{\sectiontitle}[1]{%
+  \bigskip
+  {\noindent\large\bfseries#1}\par
+  \medskip
+}
+
+% ---------- Scripture box ----------
+\newtoggle{InOuterBox}
+
+\newcommand{\ScriptureListSetup}{%
+    \setlength{\labelwidth}{0.8cm}%
+    \setlength{\labelsep}{0.25cm}%
+    \setlength{\leftmargin}{1.05cm}%
+    \setlength{\rightmargin}{0pt}%
+    \setlength{\topsep}{0pt}%
+    \setlength{\partopsep}{0pt}%
+    \setlength{\parsep}{0pt}%
+    \setlength{\itemsep}{0pt}%
+}
+
+\newenvironment{ScriptureBox}
+{%
+  \iftoggle{InOuterBox}{%
+    % inside another box: no frame, so it can split across pages
+    \par\vspace{2pt}\noindent{\color{gray!70}\rule{\linewidth}{0.4pt}}\par
+    \linespread{1.05}\selectfont
+    \begin{list}{}{\ScriptureListSetup}%
+  }{%
+    % normal case: shaded, breakable box
+    \begin{tcolorbox}[
+        width=\textwidth,
+        center,
+        colback=gray!5,
+        colframe=gray!70,
+        enhanced,
+        boxrule=0.5pt,
+        breakable,
+        left=0pt,
+        right=6pt,
+        top=4pt,
+        bottom=4pt
+    ]
+    \linespread{1.05}\selectfont
+    \begin{list}{}{\ScriptureListSetup}%
+  }%
+}
+{%
+  \iftoggle{InOuterBox}{%
+    \end{list}%
+    \par\noindent{\color{gray!70}\rule{\linewidth}{0.4pt}}\par\vspace{2pt}%
+  }{%
+    \end{list}%
+    \end{tcolorbox}%
+  }%
+}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+% ---------- Dialogue box ----------
+\newenvironment{DialogueBox}[1][A Conversation Between Brothers]
+{%
+\begin{tcolorbox}[
+    width=\textwidth,
+    colback=gray!5,
+    colframe=gray!70,
+    colbacktitle=gray,
+    coltitle=white,
+    title={#1},
+    halign title=center,
+    boxrule=0.5pt,
+    breakable
+]
+\linespread{1.05}\selectfont
+}
+{%
+\end{tcolorbox}
+}
+
+% ---------- Question checkboxes ----------
+\newcommand{\CheckBox}{{\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{0.6pt}%
+  \raisebox{-0.1em}{\fbox{\rule{0pt}{0.75em}\hspace{0.75em}}}}}
+
+\newcommand{\AskQ}[1]{%
+  \par\noindent
+  \parbox[b]{\dimexpr\linewidth-0.8cm\relax}{#1}%
+  \hfill\CheckBox\par}
+
+\newcommand{\AskItem}[1]{%
+  \parbox[t]{\dimexpr\linewidth-0.8cm\relax}{#1}%
+  \hfill\CheckBox}
+
+% ---------- Headers ----------
+\setlength{\headheight}{18pt}          % 16pt in the last book; a bit more for the lamb icon
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+
+
+\fancyhead[LE]{\includegraphics[height=0.6cm]{images/lamb1.png}\ \small Brought into Glory}
+\fancyhead[RO]{\small\leftmark\ \includegraphics[height=0.6cm]{images/lamb1.png}}
+\fancyfoot[LE,RO]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\renewcommand{\chaptermark}[1]{%
+  \markboth{Chapter \thechapter\ #1}{}}
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[LE,RO]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+% ---------- Chapters (English) ----------
+\renewcommand{\chaptername}{Chapter}
+\renewcommand{\thechapter}{\arabic{chapter}}
+
+% ---------- Footnotes ----------
+\usepackage{csquotes}
+\setlength{\footnotemargin}{0pt}
+\renewcommand{\footnotelayout}{\raggedright}
+
+% ---------- Symbols ----------
+\usepackage{pifont}
+\usepackage{amssymb}
+\usepackage{fontawesome5}
+
+% ---------- Chapter style ----------
+\titleformat{\chapter}[display]
+  {\Huge\bfseries\raggedright}
+  {Chapter \thechapter}
+  {1cm}
+  {\hyphenpenalty=10000\exhyphenpenalty=10000}
+
+
+
+
+
+
+
+
+\begin{document}
+
+\includepdf[
+  pages=1,
+  fitpaper=true,
+  scale=1
+]{cover/English_ebook_6_9.pdf}
+
+
+
+% =========================
+% Front Matter
+% =========================
+
+%\frontmatter
+%\pagenumbering{arabic}
+
+% ----- Copyright -----
+\clearpage
+\thispagestyle{empty}
+\vspace*{\fill}
+\footnotesize
+
+\noindent
+© 2026 Chris Kuo
+
+\vspace{0.5cm}
+
+\noindent 
+ISBN: 979-8-9825592-2-7\\
+First edition: December, 2026
+
+\vspace{0.5cm}
+\noindent All rights reserved. No part of this publication may be reproduced, stored in a retrieval system, or transmitted in any form or by any means, electronic, mechanical, photocopying, recording, scanning, or otherwise, except as permitted under Section 107 or 108 of the 1976 United States Copyright Act, without the prior written permission of the publisher, or in the case of brief quotations embodied in critical reviews and certain other noncommercial uses permitted by copyright law. 
+
+While every effort has been made to ensure the reliability of the information presented in this publication, Innovation Press assumes no responsibility for errors or omissions. However, neither the author nor Innovation Press assumes any liability for damages resulting from the use of the information contained herein. 
+
+The illustrations included in the second edition were created by the author with the assistance of Microsoft Copilot and were subsequently reviewed, edited, and curated for educational purposes.
+
+Email address: ck2869@columbia.edu
+
+
+\vfill
+
+\noindent The Innovation Press, \\
+\noindent Ann Arbor, MI 
+\begin{figure}[!htbp]
+  \includegraphics[width=0.20\textwidth]{others/innovation_press.png}% Replace example-image with the filename of your image
+\end{figure}
+\vfill
+
+% ----- Copyright -----
+\clearpage
+\thispagestyle{empty}
+\vspace*{\fill}
+\begin{center}
+\large
+My dear friend \rule{2cm}{0.4pt}:
+
+\medskip
+If you sometimes think of heaven, \\
+then this book is for you.
+\end{center}
+\vspace*{\fill}
+
+
+% ----- TOC -----
+% ----- Front Matter -----
+\pagenumbering{roman}
+
+\input{chapters/revelation_gospel_en.tex}
+
+\clearpage
+\vspace*{-1.1in}
+{
+\setstretch{1.2}
+\tableofcontents
+}
+
+\makeatletter
+{%
+\vspace*{-0.5cm}
+  \renewcommand{\listtablename}{Tables}%
+  \setlength{\cftafterlottitleskip}{1em}%
+  \setstretch{1.0}%
+  \setlength{\cfttabindent}{0pt}   % List of Tables: start at the left margin
+  \setlength{\cftbeforetabskip}{0.4em}%
+  \let\addvspace\@gobble
+  \listoftables
+}
+
+\vspace*{0.3cm}
+{%
+  \renewcommand{\listfigurename}{Figures}%
+  \setlength{\cftafterloftitleskip}{1em}%
+  \setstretch{1.0}%
+ \setlength{\cftfigindent}{0pt}   % List of Figures: start at the left margin
+  \setlength{\cftbeforefigskip}{0.4em}%
+  \let\addvspace\@gobble
+  \let\clearpage\relax
+  \listoffigures
+}
+\makeatother
+
+
+% Main Matter
+%\mainmatter
+%\pagenumbering{arabic}
+
+% Main Matter
+\clearpage
+\pagenumbering{arabic}
+
+
+
+
+
+\input{chapters/self_preface_en.tex}
+\input{chapters/ch01_en.tex}
+\input{chapters/ch02_en.tex}
+\input{chapters/ch03_en.tex}
+\input{chapters/ch04_en.tex}
+\input{chapters/ch05_en.tex}
+\input{chapters/ch06_en.tex}
+\input{chapters/ch07_en.tex}
+\input{chapters/ch08_en.tex}
+\input{chapters/ch09_en.tex}
+\input{chapters/ch10_en.tex}
+\input{chapters/ch11_en.tex}
+\input{chapters/ch12_en.tex}
+\input{chapters/appendix_qa_en.tex}
+\input{chapters/appendix_endtime_en.tex}
+\input{chapters/appendix_7years_en.tex}
+\input{chapters/appendix_rapture_en.tex}
+\input{chapters/appendix_millennialism_en.tex}
+\input{chapters/appendix_teachers_en.tex}
+
+\end{document}
