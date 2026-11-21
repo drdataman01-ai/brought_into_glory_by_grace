@@ -197,6 +197,37 @@
 \end{tcolorbox}%
 }
 
+% ---------- Scripture box with an observation question ----------
+% \begin{ScriptureBox2}{question} \item[1:1] ... \end{ScriptureBox2}
+% (the question is optional; without it, only the verses are shown)
+\newcommand{\ScriptureQuestionLabel}{\faSearch\ Observe:}
+\NewDocumentEnvironment{ScriptureBox2}{+g}
+{%
+  \begin{tcolorbox}[
+      enhanced,
+      breakable,
+      width=\textwidth,
+      colback=burgundy!6,
+      colframe=burgundy!75,
+      boxrule=0pt,
+      leftrule=3pt,
+      arc=2pt,
+      left=8pt, right=8pt, top=6pt, bottom=6pt,
+      before skip=12pt, after skip=12pt,
+      segmentation style={burgundy!60, dashed, line width=0.4pt},
+      lower separated=true, middle=5pt,
+      before lower={\setlength{\parindent}{0pt}\linespread{1.05}\selectfont},
+  ]
+  \linespread{1.05}\selectfont
+  \begin{list}{}{\ScriptureListSetup}%
+}
+{%
+  \end{list}%
+  \IfValueT{#1}{\tcblower
+    {\color{burgundy}\bfseries\ScriptureQuestionLabel}\ #1}%
+  \end{tcolorbox}%
+}
+
 % ---------- Question checkboxes ----------
 \newcommand{\CheckBox}{{\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{0.6pt}%
   \raisebox{-0.1em}{\fbox{\rule{0pt}{0.75em}\hspace{0.75em}}}}}
@@ -211,7 +242,7 @@
   \hfill\CheckBox}
 
 % ---------- Headers ----------
-\setlength{\headheight}{18pt}          % 16pt in the last book; a bit more for the lamb icon
+\setlength{\headheight}{22pt}          % 16pt in the last book; more for the lamb icon
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
