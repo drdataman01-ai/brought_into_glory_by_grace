@@ -171,23 +171,24 @@
 \end{tcolorbox}
 }
 
-% ---------- Reader question callout ----------
+% ---------- Reader question callout (forest green) ----------
+\definecolor{reflectgreen}{HTML}{2E6B3F}
 \newenvironment{ReaderQuestion}[1][A Question for You]
 {%
 \begin{tcolorbox}[
     enhanced,
     breakable,
     width=\textwidth,
-    colback=burgundy!6,
-    colframe=burgundy!75,
+    colback=reflectgreen!6,
+    colframe=reflectgreen!75,
     boxrule=0pt,
     leftrule=3pt,
     arc=2pt,
     left=8pt, right=8pt, top=6pt, bottom=6pt,
     before skip=12pt, after skip=12pt,
-    fonttitle=\bfseries\color{burgundy},
-    coltitle=burgundy,
-    colbacktitle=burgundy!6,
+    fonttitle=\bfseries\color{reflectgreen},
+    coltitle=reflectgreen,
+    colbacktitle=reflectgreen!6,
     title={#1},
     attach title to upper={\par\smallskip},
 ]
@@ -197,6 +198,34 @@
 \end{tcolorbox}%
 }
 
+
+% ---------- In-depth analysis box (blue) ----------
+\definecolor{indepthblue}{HTML}{1F4E79}
+\newenvironment{InDepth}[1][In-Depth Analysis]
+{%
+\begin{tcolorbox}[
+    enhanced,
+    breakable,
+    width=\textwidth,
+    colback=indepthblue!5,
+    colframe=indepthblue!80,
+    boxrule=0.6pt,
+    arc=2pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt,
+    before skip=12pt, after skip=12pt,
+    fonttitle=\bfseries,
+    coltitle=white,
+    colbacktitle=indepthblue!80,
+    title={\faSearchPlus\ #1},
+]
+\linespread{1.05}\selectfont
+\setlength{\parindent}{1.5em}%
+}
+{%
+\end{tcolorbox}%
+}
+\newcommand{\InDepthHeading}[1]{%
+  {\noindent\color{indepthblue}\bfseries #1\par}\smallskip}
 % ---------- Scripture box with an observation question ----------
 % \begin{ScriptureBox2}{question} \item[1:1] ... \end{ScriptureBox2}
 % (the question is optional; without it, only the verses are shown)
@@ -228,6 +257,17 @@
   \end{tcolorbox}%
 }
 
+% One row of a table inside an InDepth box (rows can break across pages)
+\newcommand{\InDepthRow}[3]{%
+  \par\nointerlineskip\noindent
+  \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.2\linewidth}|
+                                >{\raggedright\arraybackslash}X|
+                                >{\raggedright\arraybackslash}X}
+  #1 & #2 & #3 \\ \hline
+  \end{tabularx}\par}
+  
+  
+  
 % ---------- Question checkboxes ----------
 \newcommand{\CheckBox}{{\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{0.6pt}%
   \raisebox{-0.1em}{\fbox{\rule{0pt}{0.75em}\hspace{0.75em}}}}}
