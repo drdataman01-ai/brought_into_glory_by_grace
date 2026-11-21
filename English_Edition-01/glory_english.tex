@@ -64,7 +64,13 @@
 \renewcommand{\cftaftertoctitle}{\hfill}
 \setlength{\cftbeforechapskip}{0.6em}
 \setlength{\cftchapnumwidth}{2em}
-
+% ---------- Index ----------
+\usepackage{imakeidx}
+\makeindex[intoc, columns=2, columnsep=1.5em, title=Index]
+\indexsetup{level=\chapter*, toclevel=chapter,
+  othercode={\markboth{Index}{Index}\small}}
+  
+  
 \renewcommand{\listtablename}{List of Tables}
 \renewcommand{\listfigurename}{List of Figures}
 \renewcommand{\cftlottitlefont}{\hfill\Large}
@@ -163,6 +169,32 @@
 }
 {%
 \end{tcolorbox}
+}
+
+% ---------- Reader question callout ----------
+\newenvironment{ReaderQuestion}[1][A Question for You]
+{%
+\begin{tcolorbox}[
+    enhanced,
+    breakable,
+    width=\textwidth,
+    colback=burgundy!6,
+    colframe=burgundy!75,
+    boxrule=0pt,
+    leftrule=3pt,
+    arc=2pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt,
+    before skip=12pt, after skip=12pt,
+    fonttitle=\bfseries\color{burgundy},
+    coltitle=burgundy,
+    colbacktitle=burgundy!6,
+    title={#1},
+    attach title to upper={\par\smallskip},
+]
+\linespread{1.05}\selectfont
+}
+{%
+\end{tcolorbox}%
 }
 
 % ---------- Question checkboxes ----------
@@ -363,5 +395,8 @@ then this book is for you.
 \input{chapters/appendix_rapture_en.tex}
 \input{chapters/appendix_millennialism_en.tex}
 \input{chapters/appendix_teachers_en.tex}
+
+\clearpage
+\printindex
 
 \end{document}
