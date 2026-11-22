@@ -402,12 +402,12 @@
 
 % ---------- Thumb tabs on the outer page edge ----------
 % Chapters 1-12 get maroon tabs; appendices get gold tabs (A1 ... A6) below them.
-% eBook mode: tabs sit 0.25 in inside the edge (KDP's no-bleed safe zone).
+% eBook mode: tabs sit 0.3 in inside the edge (outside KDP's 0.25 in no-bleed margin).
 % Bleed mode: tabs run 0.125 in past the trim line, so they reach the edge after trimming.
 \ifKDPBleed
   \newcommand{\ThumbInset}{0pt}\newcommand{\ThumbTopShift}{0.125in}
 \else
-  \newcommand{\ThumbInset}{0.25in}\newcommand{\ThumbTopShift}{0pt}
+  \newcommand{\ThumbInset}{0.3in}\newcommand{\ThumbTopShift}{0pt}
 \fi
 \newtoggle{InAppendix}
 \apptocmd{\appendix}{\global\toggletrue{InAppendix}}{}{}
@@ -426,14 +426,25 @@
 \tikzset{thumbtab/.style={fill=\ThumbColor, text=white,
   minimum width=1.05cm, minimum height=0.85cm, inner sep=1pt,
   font=\footnotesize\bfseries, rounded corners=2pt}}
+% ---------- Physical page count (what KDP sees) ----------
+% \PhysPage counts every page actually written to the PDF. A physical odd page
+% is a right-hand page (recto); its outer edge is on the right.
+\newcount\PhysPage
+\AddToShipoutPictureBG{\global\advance\PhysPage by 1\relax}
+% Start the next page on a right-hand page, adding a blank page if needed.
+% Used before \pagenumbering so that page i and page 1 are both right-hand
+% pages; this keeps odd page numbers on the right, as KDP expects.
+\newcommand{\ClearToRecto}{\clearpage
+  \ifodd\PhysPage\null\thispagestyle{empty}\ClearThumbOnly\clearpage\fi}
+\newcommand{\ClearThumbOnly}{\gdef\ThumbText{}}
 \AddToShipoutPictureBG{%
   \ifx\ThumbText\empty\else
   \begin{tikzpicture}[remember picture, overlay]
-    \ifodd\value{page}
+    \ifodd\PhysPage   % right-hand page: tab on the right (outer) edge
       \node[thumbtab, anchor=north east]
         at ([xshift=-\ThumbInset, yshift=-\ThumbY]current page.north east)
         {\ifKDPBleed\hspace*{0.15cm}\fi\ThumbText};
-    \else
+    \else             % left-hand page: tab on the left (outer) edge
       \node[thumbtab, anchor=north west]
         at ([xshift=\ThumbInset, yshift=-\ThumbY]current page.north west)
         {\ThumbText\ifKDPBleed\hspace*{0.15cm}\fi};
@@ -497,8 +508,8 @@ Email address: ck2869@columbia.edu
 \end{figure}
 \vfill
 
-% ----- Copyright -----
-\clearpage
+% ----- Dedication (page i, on a right-hand page) -----
+\ClearToRecto
 \thispagestyle{empty}
 \vspace*{\fill}
 \begin{center}
@@ -556,7 +567,7 @@ then this book is for you.
 %\pagenumbering{arabic}
 
 % Main Matter
-\clearpage
+\ClearToRecto   % page 1 must be a right-hand page
 \pagenumbering{arabic}
 
 
