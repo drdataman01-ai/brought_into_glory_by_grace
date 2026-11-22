@@ -1,47 +1,68 @@
+% ---------- Recommendation page styles (can also go in the preamble) ----------
+% Each recommendation sits in a light panel with a burgundy left rule,
+% echoing the scripture and question boxes inside the book.
+% Panels may break across pages; \nopagebreak keeps the signature with the last lines.
+\providecommand{\RecSign}[2]{%
+  \par\nopagebreak\smallskip
+  \begin{flushright}
+    {\color{burgundy}\bfseries ——\ #1}\\[1pt]
+    {\footnotesize\color{black!65}#2}
+  \end{flushright}}
 
-% Separator between recommendations (define once; also fine in the preamble)
-\providecommand{\RecSep}{%
-  \par\bigskip
+\ifdefined\RecTitle\else
+\newcommand{\RecTitle}[1]{%
+  {\noindent\color{burgundy}\bfseries #1\par}\medskip}
+\fi
+
+\ifdefined\Recommendation\else
+\newenvironment{Recommendation}[2]
+{%
+  \def\RecName{#1}\def\RecRole{#2}%
+  \begin{tcolorbox}[
+      enhanced,
+      breakable,
+      width=\textwidth,
+      colback=burgundy!3,
+      colframe=burgundy!60,
+      boxrule=0pt,
+      leftrule=2pt,
+      arc=0pt,
+      left=10pt, right=8pt, top=8pt, bottom=4pt,
+      before skip=10pt, after skip=14pt,
+  ]
+  \setlength{\parindent}{2em}\linespread{1.2}\selectfont
+}
+{%
+  \RecSign{\RecName}{\RecRole}%
+  \end{tcolorbox}%
+}
+\fi
+
+% Small ornament under the page title
+\providecommand{\RecOrnament}{%
   \begin{center}
-    {\color{burgundy}\rule{0.3\textwidth}{0.4pt}}
-  \end{center}
-  \bigskip}
-
+    {\color{burgundy!60}\rule[0.5ex]{0.12\textwidth}{0.4pt}\quad
+     \ding{167}\quad
+     \rule[0.5ex]{0.12\textwidth}{0.4pt}}
+  \end{center}\vspace{-0.5em}}
 
 
 \chapter*{推薦的話}
 \addcontentsline{toc}{chapter}{推薦的話}
+\RecOrnament
 
-
-\normalsize
-
+\begin{Recommendation}{林恆生牧師}{紐約新城歸正教會華語部牧師}
 如果你想更有系統地學習啟示錄這卷書，我很樂意推薦《被恩典帶入榮耀》。本書以得勝的基督為核心，並透過歷史背景、清晰的圖表及不同末世論觀點的比較，幫助我們更容易掌握經文。書中也有實用的小組討論資源，無論個人研讀或教會查經，都能帶來幫助。
+\end{Recommendation}
 
-\begin{flushright}
-\textbf{林恆生牧師}\\
-紐約新城歸正教會華語部牧師
-\end{flushright}
-
-\RecSep
-
-\normalsize
-
+\begin{Recommendation}{商志雍\ 弟兄}{臺大醫院精神醫學部主任與兒童精神科主任}
 《被恩典帶入榮耀》是一本非常值得推薦的著作，因為它從更完整的聖經脈絡，認識上帝在歷史中所成就的救贖工作。本書的一大特色，是兼顧聖經的深入研究與信仰生活的實際需要。作者參考不同學者的研究成果，細心梳理經文的背景、結構與意義，並適度介紹不同的解釋觀點，使讀者不僅知道經文說了什麼，也能進一步理解其中所傳達的信息。全書編排清楚，循序漸進，即使沒有受過專業神學訓練的讀者，也能逐步掌握啟示錄的重要內容。
 
 這不僅是一本幫助我們理解《啟示錄》的書，更是一本能夠堅固信心、激勵生命的屬靈讀物。誠摯推薦給每一位渴望深入認識聖經、並活出忠心與盼望的讀者。
+\end{Recommendation}
 
-\begin{flushright}
-\textbf{商志雍  醫師}\\
-臺大醫院精神醫學部主任與兒童精神科主任
-\end{flushright}
-
-\RecSep
-
-
-\normalsize
-
-{\bfseries 從同窗到同行：在恩典中奔向榮耀}\par\smallskip. 
-
+\begin{Recommendation}{賴亮全\ 弟兄}{國立台灣大學醫學院生理學研究所教授}
+\RecTitle{從同窗到同行：在恩典中奔向榮耀}
 高中時，景光和我都還不認識主。那時的我們意氣風發，以為憑著自己的聰明與努力，就能掌握人生的方向。若有人告訴我，有一天我會為景光一本講述耶穌基督與永恆盼望的書寫推薦，我大概很難想像。然而，神的恩典竟臨到我們。如今，我們成為主內的弟兄，一同奔跑天路。
 因此，《被恩典帶入榮耀》這個書名對我格外親切。書中所述說的恩典，正是我們親身領受的恩典；書中所指向的榮耀，也是我們如今一同仰望的終點。
 
@@ -50,55 +71,14 @@
 
 盼這本書陪伴疲乏的人重新得力，扶持憂傷的人仰望主，也幫助尋求信仰的朋友認識耶穌。願我們都因祂的恩典，忠心走完今生的路，直到那日，與眾聖徒一同站在羔羊面前，將榮耀歸給祂。
 主耶穌啊，我願祢來！
+\end{Recommendation}
 
-
-
-\begin{flushright}
-\textbf{賴亮全  弟兄}\\
-國立台灣大學醫學院生理學研究所教授
-\end{flushright}
-
-
-\RecSep
-
-
-%\begin{center}
-%\rule{4in}{0.5pt}  % 2 inches wide, 0.5 pt thick
-%\end{center}
-%\vspace{0.3cm}
-\begin{center}
-$\cdot\quad\cdot\quad\cdot$
-\end{center}
-
-\normalsize
-
-景光長老是我的高中同班同學。多年來曾出版多本專業參考書。難能可貴的是，他在繁忙工作之餘仍忠心服事主，將寫作恩賜用於服事。
+\begin{Recommendation}{陳坤南\ 弟兄}{詮順耳鼻喉科診所院長}
+景光長老是我的高中同班同學。他多年來曾出版多本專業參考書。難能可貴的是，他在繁忙工作之餘仍忠心服事主，將寫作恩賜用於服事。
 《被恩典帶入榮耀》以清晰的整理與分析，帶領讀者認識啟示錄，並於附錄中回應常見疑問，參照主流神學觀點加以說明。全書更引導讀者聚焦於耶穌基督必再來，以及信徒經歷苦難後進入榮耀的救恩盼望。無論初讀、重讀，或作為小組查考參考，都是值得推薦的一本好書。
+\end{Recommendation}
 
-\begin{flushright}
-\textbf{陳坤南  弟兄}\\
-詮順耳鼻喉科診所院長
-\end{flushright}
-
-
-\RecSep
-
-%\begin{center}
-%\rule{4in}{0.5pt}  % 2 inches wide, 0.5 pt thick
-%\end{center}
-%\vspace{0.3cm}
-\begin{center}
-$\cdot\quad\cdot\quad\cdot$
-\end{center}
-
-\normalsize
-
+\begin{Recommendation}{章文箴\ 弟兄}{中央研究院物理研究所研究員}
 感謝神，景光在本書開頭就標定「基督/羔羊」為啟示錄信息的主軸，這將有助於我們在能學習啟示錄時，在眾多看似糾纏多重的資訊中，不致偏離失焦，得著領受「耶穌基督的啟示」，預備好自己，等候朝見祂。
 景光是我在美國唸書同時期信主親愛的弟兄，我們在校園查經班、教會，一起追求主，領受許多主的恩典，如今看到他以生命和文字服事主、服事教會，給了我諸多提醒和激勵，甚願他這本書為主使用，成為許多弟兄姊妹在信仰上的幫助。
-							
-
-
-\begin{flushright}
-\textbf{章文箴 弟兄}\\
-中央研究院物理研究所研究員
-\end{flushright}
+\end{Recommendation}
