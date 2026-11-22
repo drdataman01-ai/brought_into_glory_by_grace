@@ -1,6 +1,23 @@
 \documentclass[12pt,twoside,openany]{book}   % openright, as in the published book
 
+% ---------- Output mode ----------
+% false = eBook PDF (6 x 9 in, cover included, thumb tabs set inside the edge)
+% true  = KDP paperback interior with bleed (6.125 x 9.25 in, no cover page,
+%         thumb tabs run off the outer edge; choose "Bleed" when uploading)
+\newif\ifKDPBleed
+\KDPBleedfalse
+
 % ---------- Page size (6x9) ----------
+\ifKDPBleed
+\usepackage[
+  paperwidth=6.125in,
+  paperheight=9.25in,
+  inner=1in,
+  outer=1.025in,
+  top=1.125in,
+  bottom=1.125in
+]{geometry}
+\else
 \usepackage[
   paperwidth=6in,
   paperheight=9in,
@@ -9,12 +26,15 @@
   top=1in,
   bottom=1in
 ]{geometry}
+\fi
 \pagenumbering{arabic}
 \usepackage{graphicx}
 \usepackage{enumitem}
 \usepackage{titlesec}
 \usepackage{etoolbox}                 % load early: \newtoggle is used below
+\PassOptionsToPackage{table}{xcolor}   % row colors in tables
 \usepackage[skins, breakable]{tcolorbox}
+\usepackage{eso-pic}                  % thumb tabs on the page edge
 \usepackage{pdfpages}
 \usepackage{setspace}
 \usepackage[multiple]{footmisc}
@@ -29,6 +49,12 @@
 % ---------- Color ----------
 \usepackage{xcolor}
 \definecolor{burgundy}{HTML}{800020}
+
+% ---------- Book palette (one place for all colors) ----------
+\definecolor{GospelMaroon}{RGB}{128,30,45}   % headings, tabs, header text
+\definecolor{GospelCream}{RGB}{253,248,238}  % light backgrounds, table stripes
+\definecolor{GospelGold}{RGB}{196,150,60}    % rules and accents
+\definecolor{PrayerGold}{RGB}{250,240,215}   % prayer box background
 
 % ---------- Typography ----------
 \setlength{\parskip}{0.15cm}
@@ -89,7 +115,7 @@
 % ---------- Unnumbered subsection heading (goes into TOC) ----------
 \newcommand{\subsectiontitle}[1]{%
   \par\vspace{1em}%
-  {\noindent\normalsize\bfseries #1\par}%
+  {\noindent\normalsize\bfseries\color{GospelMaroon!80} #1\par}%
   \nobreak\vspace{0.5em}%
   \addcontentsline{toc}{section}{#1}%
 }
@@ -97,7 +123,7 @@
 % ---------- Section title (custom) ----------
 \newcommand{\sectiontitle}[1]{%
   \bigskip
-  {\noindent\large\bfseries#1}\par
+  {\noindent\large\bfseries\color{GospelMaroon}#1}\par
   \medskip
 }
 
@@ -119,7 +145,7 @@
 {%
   \iftoggle{InOuterBox}{%
     % inside another box: no frame, so it can split across pages
-    \par\vspace{2pt}\noindent{\color{gray!70}\rule{\linewidth}{0.4pt}}\par
+    \par\vspace{2pt}\noindent{\color{GospelGold}\rule{\linewidth}{0.4pt}}\par
     \linespread{1.05}\selectfont
     \begin{list}{}{\ScriptureListSetup}%
   }{%
@@ -127,10 +153,12 @@
     \begin{tcolorbox}[
         width=\textwidth,
         center,
-        colback=gray!5,
-        colframe=gray!70,
+        colback=GospelCream,
+        colframe=GospelGold,
         enhanced,
-        boxrule=0.5pt,
+        boxrule=0pt,
+        leftrule=3pt,
+        arc=2pt,
         breakable,
         left=0pt,
         right=6pt,
@@ -144,7 +172,7 @@
 {%
   \iftoggle{InOuterBox}{%
     \end{list}%
-    \par\noindent{\color{gray!70}\rule{\linewidth}{0.4pt}}\par\vspace{2pt}%
+    \par\noindent{\color{GospelGold}\rule{\linewidth}{0.4pt}}\par\vspace{2pt}%
   }{%
     \end{list}%
     \end{tcolorbox}%
@@ -156,10 +184,12 @@
 {%
 \begin{tcolorbox}[
     width=\textwidth,
-    colback=gray!5,
-    colframe=gray!70,
-    colbacktitle=gray,
+    colback=GospelCream,
+    colframe=GospelGold!85!black,
+    colbacktitle=GospelGold!85!black,
     coltitle=white,
+    fonttitle=\bfseries,
+    arc=2pt,
     title={#1},
     halign title=center,
     boxrule=0.5pt,
@@ -288,17 +318,20 @@
 \fancyhf{}
 
 
-\fancyhead[LE]{\includegraphics[height=0.6cm]{images/lamb1.png}\ \small Brought into Glory}
-\fancyhead[RO]{\small\leftmark\ \includegraphics[height=0.6cm]{images/lamb1.png}}
-\fancyfoot[LE,RO]{\thepage}
-\renewcommand{\headrulewidth}{0pt}
+\fancyhead[LE]{\includegraphics[height=0.6cm]{images/lamb1.png}\ {\small\color{GospelMaroon} Brought into Glory}}
+\fancyhead[RO]{{\small\color{GospelMaroon}\leftmark}\ \includegraphics[height=0.6cm]{images/lamb1.png}}
+\fancyfoot[LE,RO]{\textcolor{GospelMaroon}{\thepage}}
+% thin gold rule under the running head
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{{\color{GospelGold}%
+  \hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}}
 
 \renewcommand{\chaptermark}[1]{%
   \markboth{Chapter \thechapter\ #1}{}}
 
 \fancypagestyle{plain}{
   \fancyhf{}
-  \fancyfoot[LE,RO]{\thepage}
+  \fancyfoot[LE,RO]{\textcolor{GospelMaroon}{\thepage}}
   \renewcommand{\headrulewidth}{0pt}
 }
 
@@ -316,23 +349,96 @@
 \usepackage{amssymb}
 \usepackage{fontawesome5}
 
-% ---------- Chapter style ----------
-\titleformat{\chapter}[display]
-  {\Huge\bfseries\raggedright}
-  {Chapter \thechapter}
-  {1cm}
-  {\hyphenpenalty=10000\exhyphenpenalty=10000}
+% =====================================================================
+% Color and design layer (no text changes; all styling lives here)
+% =====================================================================
 
+% ---------- Chapter openers ----------
+% Numbered chapters: a maroon "Chapter n" tag, a maroon title, and a gold rule.
+\newcommand{\ChapterTag}{%
+  \tikz[baseline=(t.base)]\node[fill=GospelMaroon, text=white,
+    rounded corners=3pt, inner xsep=9pt, inner ysep=5pt,
+    font=\Large\bfseries](t){Chapter \thechapter};}
+\titleformat{\chapter}[display]
+  {\SetThumbForChapter\normalfont\raggedright}
+  {\ChapterTag}
+  {0.9em}
+  {\color{GospelMaroon}\huge\bfseries\hyphenpenalty=10000\exhyphenpenalty=10000}
+  [\vspace{0.5em}{\color{GospelGold}\titlerule[1.5pt]}]
+% Unnumbered chapters (Preface, Contents, appendices, Index): title and gold rule.
+\titleformat{name=\chapter,numberless}[display]
+  {\SetThumbForStarred\normalfont\raggedright}
+  {}
+  {0pt}
+  {\color{GospelMaroon}\huge\bfseries\hyphenpenalty=10000\exhyphenpenalty=10000}
+  [\vspace{0.5em}{\color{GospelGold}\titlerule[1.5pt]}]
+\titlespacing*{\chapter}{0pt}{50pt}{30pt}
 
 % ---------- Section headings: left-aligned, no hyphenation ----------
+\newcommand{\SectionMark}{\textcolor{GospelGold}{\rule{0.55em}{0.55em}}\hspace{0.45em}}
 \titleformat{\section}
-  {\normalfont\Large\bfseries\raggedright}
-  {\thesection}{1em}
+  {\normalfont\Large\bfseries\raggedright\color{GospelMaroon}}
+  {\SectionMark\thesection}{0.8em}
   {\hyphenpenalty=10000\exhyphenpenalty=10000}
+\titleformat{name=\section,numberless}
+  {\normalfont\Large\bfseries\raggedright\color{GospelMaroon}}
+  {}{0pt}
+  {\SectionMark\hyphenpenalty=10000\exhyphenpenalty=10000}
 \titleformat{\subsection}
-  {\normalfont\large\bfseries\raggedright}
-  {\thesubsection}{1em}
+  {\normalfont\large\bfseries\raggedright\color{GospelMaroon!80}}
+  {\thesubsection}{0.8em}
   {\hyphenpenalty=10000\exhyphenpenalty=10000}
+
+% ---------- Captions ----------
+\captionsetup{labelfont={bf,color=GospelMaroon}}
+
+% ---------- Tables: maroon rules and cream stripes ----------
+% Ordinary tables: row 1 is the header, stripes start at row 2 (even rows cream).
+% Longtables: row 1 is the caption, row 2 the header, stripes start at row 3 (odd rows cream).
+\AtBeginEnvironment{table}{\rowcolors{2}{white}{GospelCream}%
+  \arrayrulecolor{GospelMaroon!70}}
+\AtBeginEnvironment{longtable}{\rowcolors{3}{GospelCream}{white}%
+  \arrayrulecolor{GospelMaroon!70}}
+
+% ---------- Thumb tabs on the outer page edge ----------
+% Chapters 1-12 get maroon tabs; appendices get gold tabs (A1 ... A6) below them.
+% eBook mode: tabs sit 0.25 in inside the edge (KDP's no-bleed safe zone).
+% Bleed mode: tabs run 0.125 in past the trim line, so they reach the edge after trimming.
+\ifKDPBleed
+  \newcommand{\ThumbInset}{0pt}\newcommand{\ThumbTopShift}{0.125in}
+\else
+  \newcommand{\ThumbInset}{0.25in}\newcommand{\ThumbTopShift}{0pt}
+\fi
+\newtoggle{InAppendix}
+\apptocmd{\appendix}{\global\toggletrue{InAppendix}}{}{}
+\gdef\ThumbText{}
+\newcommand{\ThumbAt}[3]{% #1 = slot, #2 = color, #3 = label
+  \xdef\ThumbY{\the\dimexpr 2.4cm + \ThumbTopShift + 0.95cm*(#1-1)\relax}%
+  \gdef\ThumbColor{#2}\gdef\ThumbText{#3}}
+\newcommand{\SetThumbForChapter}{%
+  \ThumbAt{\number\value{chapter}}{GospelMaroon}{\arabic{chapter}}}
+\newcommand{\SetThumbForStarred}{%
+  \iftoggle{InAppendix}%
+    {\ThumbAt{\number\numexpr\value{chapter}+12\relax}{GospelGold!90!black}%
+       {A\arabic{chapter}}}%
+    {\gdef\ThumbText{}}}
+\newcommand{\ClearThumb}{\global\togglefalse{InAppendix}\gdef\ThumbText{}}
+\tikzset{thumbtab/.style={fill=\ThumbColor, text=white,
+  minimum width=1.05cm, minimum height=0.85cm, inner sep=1pt,
+  font=\footnotesize\bfseries, rounded corners=2pt}}
+\AddToShipoutPictureBG{%
+  \ifx\ThumbText\empty\else
+  \begin{tikzpicture}[remember picture, overlay]
+    \ifodd\value{page}
+      \node[thumbtab, anchor=north east]
+        at ([xshift=-\ThumbInset, yshift=-\ThumbY]current page.north east)
+        {\ifKDPBleed\hspace*{0.15cm}\fi\ThumbText};
+    \else
+      \node[thumbtab, anchor=north west]
+        at ([xshift=\ThumbInset, yshift=-\ThumbY]current page.north west)
+        {\ThumbText\ifKDPBleed\hspace*{0.15cm}\fi};
+    \fi
+  \end{tikzpicture}\fi}
 
 
 
@@ -340,11 +446,13 @@
 
 \begin{document}
 
+\ifKDPBleed\else   % the paperback cover is uploaded separately to KDP
 \includepdf[
   pages=1,
   fitpaper=true,
   scale=1
 ]{cover/English_ebook_6_9.pdf}
+\fi
 
 
 
@@ -476,6 +584,7 @@ then this book is for you.
 \input{chapters/appendix_teachers_en.tex}
 
 \clearpage
+\ClearThumb   % no thumb tab on the index
 \printindex
 
 \end{document}
