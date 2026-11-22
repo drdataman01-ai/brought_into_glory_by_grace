@@ -16,6 +16,7 @@
 \usepackage{titlesec}
 \usepackage{indentfirst}   % indent the first paragraph after every heading (Chinese style)
 \usepackage{tocloft}
+\usepackage{etoolbox}                 % load early: \newtoggle is used below
 \usepackage[skins, breakable]{tcolorbox}
 \usepackage{caption}
 \DeclareCaptionLabelSeparator{zhcolon}{：}
@@ -70,23 +71,14 @@
     \addcontentsline{toc}{section}{#1}%
 }
 \usepackage{booktabs}
-\newenvironment{ScriptureBox}
-{%
-\begin{tcolorbox}[
-    width=\textwidth,
-    center,
-    colback=gray!5,
-    colframe=gray!70,
-    enhanced,
-    boxrule=0.5pt,
-    breakable,
-    left=0pt,
-    right=5pt,
-    top=4pt,
-    bottom=4pt
-]
-\linespread{1.1}\selectfont
-\begin{list}{}{%
+% ---------- Colors used by the boxes ----------
+\definecolor{burgundy}{HTML}{800020}
+\definecolor{reflectgreen}{HTML}{2E6B3F}
+\definecolor{indepthblue}{HTML}{1F4E79}
+
+% ---------- Scripture box ----------
+% Shared list layout for all scripture boxes
+\newcommand{\ScriptureListSetup}{%
     \setlength{\labelwidth}{0.8cm}%
     \setlength{\labelsep}{0.25cm}%
     \setlength{\leftmargin}{1.05cm}%
@@ -96,11 +88,138 @@
     \setlength{\parsep}{0pt}%
     \setlength{\itemsep}{0pt}%
 }
+
+\newtoggle{InOuterBox}
+
+\newenvironment{ScriptureBox}
+{%
+  \iftoggle{InOuterBox}{%
+    % inside another box: no frame, so it can split across pages
+    \par\vspace{2pt}\noindent{\color{gray!70}\rule{\linewidth}{0.4pt}}\par
+    \linespread{1.1}\selectfont
+    \begin{list}{}{\ScriptureListSetup}%
+  }{%
+    % normal case: shaded, breakable box
+    \begin{tcolorbox}[
+        width=\textwidth,
+        center,
+        colback=gray!5,
+        colframe=gray!70,
+        enhanced,
+        boxrule=0.5pt,
+        breakable,
+        left=0pt,
+        right=5pt,
+        top=4pt,
+        bottom=4pt
+    ]
+    \linespread{1.1}\selectfont
+    \begin{list}{}{\ScriptureListSetup}%
+  }%
 }
 {%
-\end{list}%
+  \iftoggle{InOuterBox}{%
+    \end{list}%
+    \par\noindent{\color{gray!70}\rule{\linewidth}{0.4pt}}\par\vspace{2pt}%
+  }{%
+    \end{list}%
+    \end{tcolorbox}%
+  }%
+}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% ---------- Scripture box with an observation question (burgundy) ----------
+% \begin{ScriptureBox2}{問題} \item[1:1] ... \end{ScriptureBox2}
+% (the question is optional; without it, only the verses are shown)
+\newcommand{\ScriptureQuestionLabel}{\faSearch\ 觀察：}
+\NewDocumentEnvironment{ScriptureBox2}{+g}
+{%
+  \begin{tcolorbox}[
+      enhanced,
+      breakable,
+      width=\textwidth,
+      colback=burgundy!6,
+      colframe=burgundy!75,
+      boxrule=0pt,
+      leftrule=3pt,
+      arc=2pt,
+      left=8pt, right=8pt, top=6pt, bottom=6pt,
+      before skip=12pt, after skip=12pt,
+      segmentation style={burgundy!60, dashed, line width=0.4pt},
+      lower separated=true, middle=5pt,
+      before lower={\setlength{\parindent}{0pt}\linespread{1.1}\selectfont},
+  ]
+  \linespread{1.1}\selectfont
+  \begin{list}{}{\ScriptureListSetup}%
+}
+{%
+  \end{list}%
+  \IfValueT{#1}{\tcblower
+    {\color{burgundy}\bfseries\ScriptureQuestionLabel}#1}%
+  \end{tcolorbox}%
+}
+
+% ---------- Reader question callout (forest green) ----------
+\newenvironment{ReaderQuestion}[1][想一想]
+{%
+\begin{tcolorbox}[
+    enhanced,
+    breakable,
+    width=\textwidth,
+    colback=reflectgreen!6,
+    colframe=reflectgreen!75,
+    boxrule=0pt,
+    leftrule=3pt,
+    arc=2pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt,
+    before skip=12pt, after skip=12pt,
+    fonttitle=\bfseries\color{reflectgreen},
+    coltitle=reflectgreen,
+    colbacktitle=reflectgreen!6,
+    title={#1},
+    attach title to upper={\par\smallskip},
+]
+\linespread{1.1}\selectfont
+}
+{%
 \end{tcolorbox}%
 }
+
+% ---------- In-depth analysis box (blue) ----------
+\newenvironment{InDepth}[1][深入分析]
+{%
+\begin{tcolorbox}[
+    enhanced,
+    breakable,
+    width=\textwidth,
+    colback=indepthblue!5,
+    colframe=indepthblue!80,
+    boxrule=0.6pt,
+    arc=2pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt,
+    before skip=12pt, after skip=12pt,
+    fonttitle=\bfseries,
+    coltitle=white,
+    colbacktitle=indepthblue!80,
+    title={\faSearchPlus\ #1},
+]
+\linespread{1.1}\selectfont
+\setlength{\parindent}{2em}%
+}
+{%
+\end{tcolorbox}%
+}
+\newcommand{\InDepthHeading}[1]{%
+  {\noindent\color{indepthblue}\bfseries #1\par}\smallskip}
+
+% One row of a table inside an InDepth box (rows can break across pages)
+\newcommand{\InDepthRow}[3]{%
+  \par\nointerlineskip\noindent
+  \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.2\linewidth}|
+                                >{\raggedright\arraybackslash}X|
+                                >{\raggedright\arraybackslash}X}
+  #1 & #2 & #3 \\ \hline
+  \end{tabularx}\par}
 
 \newenvironment{DialogueBox}[1][弟兄對話]
 {%
@@ -123,7 +242,6 @@
 }
 
 \usepackage{setspace}
-\usepackage{etoolbox}
 
 \pretocmd{\tableofcontents}{\begingroup\setstretch{1.0}}{}{}
 \apptocmd{\tableofcontents}{\endgroup}{}{}
@@ -175,8 +293,6 @@
 \renewcommand{\thesection}{\arabic{chapter}.\arabic{section}}
 % ---------- Footnotes ----------
 \usepackage{csquotes}
-% Burgundy color (print-safe, classical)
-\definecolor{burgundy}{HTML}{800020}
 \newcommand{\sectiontitle}[1]{%
   \bigskip
   {\noindent\large\bfseries\color{black}#1}\par
