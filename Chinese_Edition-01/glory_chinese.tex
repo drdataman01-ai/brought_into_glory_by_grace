@@ -318,6 +318,14 @@
 \renewcommand{\headrulewidth}{0pt}
 \usepackage{fontawesome5}
 
+% ---------- Index (sorted by stroke count of the first character) ----------
+\usepackage{imakeidx}
+\makeindex[intoc, columns=2, columnsep=1.5em, title=索引]
+\indexsetup{level=\chapter*, toclevel=chapter,
+  othercode={\markboth{索引}{索引}\small}}
+\newcommand{\idx}[2]{\index{#1#2@#2}}   % \idx{stroke count}{term}
+
+
 %\titleformat{\chapter}
 %  {\color{black}\Huge\bfseries} % format
 %  {\thechapter}                    % 第 n 章
@@ -350,10 +358,8 @@
 \noindent
 © 2026 Chris Kuo
 
-\vspace{0.5cm}
-
 \noindent 
-%ISBN：\\
+ISBN：979-8-9825592-3-4 \\
 第一版：2026 年 12 月\\
 
 本書任何部分不得以任何形式重製、儲存或傳播（包括電子、機械、影印、錄音或其他方式）。惟依據1976年《美國著作權法》第107條及第108條所規範之合理使用，或用於評論、教學及其他非商業性用途之適當引用，則不在此限。如有意以任何形式重製、儲存或傳播，請取得作者書面同意。
@@ -451,5 +457,9 @@
 \thispagestyle{empty}
 \mbox{}
 \clearpage
+
+\indexprologue{\noindent{\small\color{black!65}%
+  本索引依詞條首字的筆劃，由少至多排序。}\par\bigskip}
+\printindex
 
 \end{document}
